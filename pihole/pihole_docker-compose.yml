@@ -23,12 +23,12 @@ services:
       TZ: "Europe/Zurich"
       WEBPASSWORD: "show-pass"
     volumes:
-      - "vol_data:/etc-pihole:/etc/pihole"
-      - "vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "vol_config:/etc-pihole:/etc/pihole"
+      - "vol_config:/etc-dnsmasq.d:/etc/dnsmasq.d"
     restart: always
     networks:
       pihole-network_default:
        ipv4_address: 10.10.10.253
 
 volumes:
-  vol_data:
+  vol_config:
