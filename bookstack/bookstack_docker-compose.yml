@@ -1,1 +1,58 @@
+#
+#
+# Portainer: Environment variables
+# MYSQL_ROOT_PASSWORD = the password is in enpass
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 bookstack-network_default
 
+
+version: "2"
+
+networks:
+  bookstack-network_default:
+   external: true
+
+services:
+  bookstack_app:
+    image: lscr.io/linuxserver/bookstack
+    container_name: bookstack_app
+    environment:
+      - PUID: 1000
+      - PGID: 1000
+      - APP_URL: http://bookstack.brainrouting.com
+      - DB_HOST: bookstack_db
+      - DB_PORT: 3306
+      - DB_USER: bookstack # do not change
+      - DB_PASS: secret # do not change
+      - DB_DATABASE: bookstackapp # do not change
+      - APP_DEFAULT_DARK_MODE: true
+    volumes:
+      - vol_config:/config
+    ports:
+      - 80:80
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+    networks:
+      bookstack-network_default:
+        ipv4_address: 10.10.10.171
+
+  bookstack_db:
+    image: lscr.io/linuxserver/mariadb
+    container_name: bookstack_db
+    environment:
+      - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD # change! show-pass
+      - MYSQL_DATABASE: bookstackapp
+      - MYSQL_USER: bookstack # do not change
+      - MYSQL_PASSWORD: secret # do not change
+    volumes:
+      - vol_db:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      bookstack-network_default:
+        ipv4_address: 10.10.10.172
+
+volumes:
+  vol_config:
+  vol_db:
