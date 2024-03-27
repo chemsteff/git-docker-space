@@ -1,1 +1,24 @@
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 dozzle-network_default
 
+version: "3"
+
+networks:
+  dozzle-network_default:
+   external: true
+
+services:
+  dozzle_app:
+    image: amir20/dozzle:latest
+    container_name: dozzle_app
+    volumes:
+      - vol_config:/var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - 80:80
+    networks:
+      dozzle-network_default:
+        ipv4_address: 10.10.10.183
+    restart: unless-stopped
+volumes:
+  vol_config:
