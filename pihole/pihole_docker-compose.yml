@@ -4,6 +4,7 @@
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 dozzle-network_default
+#
 
 version: "3"
 
@@ -12,23 +13,23 @@ networks:
    external: true
 
 services:
-  pihole_app:
+  pihole:
     container_name: pihole_app
     image: pihole/pihole:latest
-    ports:
-      - "53:53/tcp"
-      - "53:53/udp"
-      - "80:80/tcp"
+    restart: always
     environment:
       TZ: "Europe/Zurich"
       WEBPASSWORD: "show-pass"
     volumes:
       - "vol_config:/etc-pihole:/etc/pihole"
       - "vol_config:/etc-dnsmasq.d:/etc/dnsmasq.d"
-    restart: always
     networks:
       pihole-network_default:
        ipv4_address: 10.10.10.253
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "80:80/tcp"
 
 volumes:
   vol_config:

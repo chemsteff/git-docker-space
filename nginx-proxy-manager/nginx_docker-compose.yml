@@ -4,6 +4,8 @@
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 nginx-network_default
+#
+
 version: "3.8"
 
 networks:
@@ -11,21 +13,22 @@ networks:
     external: true
 
 services:
-  nginx-proxy_app:
+  nginx-proxy:
     image: 'docker.io/jc21/nginx-proxy-manager:2.10.4'
     container_name: nginx-proxy
+    restart: always
     environment:
       - PUID=1000
       - PGID=1000
-    restart: always
-    ports:
-      - '80:80'
-      - '443:443'
-    networks:
-      nginx-network_default:
-       ipv4_address: 10.10.10.181
     volumes:
       - vol_config:/data:/data
       - vol_config:/letsencrypt:/etc/letsencrypt
+    networks:
+      nginx-network_default:
+       ipv4_address: 10.10.10.181
+    ports:
+      - '80:80'
+      - '443:443'
+    
 volumes:
   vol_config:
