@@ -1,0 +1,65 @@
+#
+# Portainer: Environment variables
+#
+# MYSQL_ROOT_PASSWORD = the password is in enpass
+# MYSQL_PASSWORD = the password is in enpass
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 shared-network_default
+
+version: '3'
+
+networks:
+  shared-network_default:
+    external: false
+
+services:
+   guacdb:
+    image: mariadb:10.9.5
+    container_name: guacamole_db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+    volumes:
+      - vol_db:/db-data:/var/lib/mysql
+    networks:
+      shared-network_default:
+        ipv4_address: 10.10.10.141
+  guacd:
+    image: guacamole/guacd:latest
+    container_name: guacd_app
+    restart: unless-stopped
+    volumes:
+      - vol_config:/drive:/drive:rw
+      - vol_config:/record:/record:rw
+    networks:
+      shared-network_default:
+        ipv4_address: 10.10.10.141
+  guacamole:
+    image: guacamole/guacamole:latest
+    container_name: guacamole_app
+    restart: unless-stopped
+    depends_on:
+      - guacdb
+      - guacd
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: guacdb
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      TOTP_ENABLED: "true"
+    volumes:
+      - vol_config:/config
+    networks:
+      shared-network_default:
+        ipv4_address: 10.10.10.141
+    ports:
+      - 8010:8080
+      
+volumes:
+  vol_config:
+  vol_db:
