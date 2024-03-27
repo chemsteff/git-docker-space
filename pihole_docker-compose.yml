@@ -25,6 +25,3 @@ services:
 
 volumes:
   data:
-
-# QNAP Konsole:
-# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 pihole-external-network
