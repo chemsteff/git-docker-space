@@ -12,9 +12,12 @@ networks:
    external: true
 
 services:
-  bookstack_app:
+  bookstack:
     image: lscr.io/linuxserver/bookstack
     container_name: bookstack_app
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
     environment:
       - PUID: 1000
       - PGID: 1000
@@ -27,18 +30,16 @@ services:
       - APP_DEFAULT_DARK_MODE: true
     volumes:
       - vol_config:/config
-    ports:
-      - 80:80
-    restart: unless-stopped
-    depends_on:
-      - bookstack_db
     networks:
       bookstack-network_default:
         ipv4_address: 10.10.10.171
+    ports:
+      - 80:80
 
   bookstack_db:
     image: lscr.io/linuxserver/mariadb
     container_name: bookstack_db
+    restart: unless-stopped
     environment:
       - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD # change! show-pass
       - MYSQL_DATABASE: bookstackapp
@@ -46,7 +47,6 @@ services:
       - MYSQL_PASSWORD: secret # do not change
     volumes:
       - vol_db:/var/lib/mysql
-    restart: unless-stopped
     networks:
       bookstack-network_default:
         ipv4_address: 10.10.10.172
