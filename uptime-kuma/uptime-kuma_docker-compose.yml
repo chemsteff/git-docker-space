@@ -4,30 +4,28 @@
 # Portainer environment variables:
 # name-xyz = show enpass
 #
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_dozzle
+#
 
-version: '3'
+version: "3"
 
 services:
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
-    security_opt:
-      - no-new-privileges:true
-    environment:
-      TZ: Europe/Zurich
     volumes:
-      - vol_data:/app/data    
+      - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       b_net_lan_default:
-          ipv4_address: 172.28.1.158
+        ipv4_address: 172.28.1.159
     ports:
-      - 8158:3001  #  <Host Port>:<Container Port> Uptime-kuma Web UI https://host_ip:8158  
+      - 59101:8080 # <Host Port>:<Container Port>
 volumes:
-  vol_data: 
+  vol_data:
 networks:
   b_net_lan_default:
    external: true
-   
