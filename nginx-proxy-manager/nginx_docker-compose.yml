@@ -39,8 +39,8 @@ services:
       b_net_dmz_default:
         ipv4_address: 172.28.1.195
     ports:
-      - 80:80 # <Host Port>:<Container Port>
-      - 443:443 # <Host Port>:<Container Port>      
+      - 80:80 # <port:host> : <port:container>
+      - 443:443 # <port:host> : <port:container>      
 volumes:
   vol_data:
 networks:
