@@ -23,9 +23,32 @@
 version: '3'
 
 services:
-   guacd_app:
+  guacamole:
+    image: guacamole/guacamole:latest
+    container_name: guacamole
+    restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    depends_on:
+      - guac_db
+      - guacd
+    environment:
+      GUACD_HOSTNAME: guacd
+      MYSQL_HOSTNAME: guac_db
+      MYSQL_DATABASE: guacamole_db
+      MYSQL_USER: guacamole_user
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      TOTP_ENABLED: true
+    volumes:
+      - vol_data:/config
+    networks:
+      b_net_lan_default:
+        ipv4_address: 172.28.1.143
+    ports:
+      - 8080:8080/tcp # <Host Port>:<Container Port>
+  guacd:
     image: guacamole/guacd:latest
-    container_name: guacd_app
+    container_name: guacd
     restart: unless-stopped
     labels:
      - com.centurylinklabs.watchtower.enable=true
@@ -33,8 +56,8 @@ services:
       - vol_data:/drive:/drive:rw
       - vol_data:/record:/record:rw
     networks:
-       b_net_lan_default:    
-         ipv4_address: 172.28.1.141       
+      b_net_lan_default:    
+        ipv4_address: 172.28.1.142
    guac_db:
     image: mariadb:10.9.5
     container_name: guac_db
@@ -50,30 +73,7 @@ services:
       - vol_db:/db-data:/var/lib/mysql
     networks:
        b_net_lan_default:
-         ipv4_address: 172.28.1.142
-   guacamole_app:
-    image: guacamole/guacamole:latest
-    container_name: guacamole_app
-    restart: unless-stopped
-    labels:
-     - com.centurylinklabs.watchtower.enable=true
-    depends_on:
-      - guac_db
-      - guacd_app
-    environment:
-      GUACD_HOSTNAME: guacd_app
-      MYSQL_HOSTNAME: guac_db
-      MYSQL_DATABASE: guacamole_db
-      MYSQL_USER: guacamole_user
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
-      TOTP_ENABLED: true
-    volumes:
-      - vol_data:/config
-    networks:
-      b_net_lan_default:
-       ipv4_address: 172.28.1.143
-    ports:
-      - - 8080:8080/tcp # <Host Port>:<Container Port>
+         ipv4_address: 172.28.1.143
 volumes:
   vol_data:
   vol_db:
