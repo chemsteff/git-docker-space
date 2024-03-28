@@ -1,0 +1,65 @@
+---
+# Simple docker-compose.yml
+#
+# Portainer environment variables:
+# SEMAPHORE_DB_PASS = show enpass
+# SEMAPHORE_ADMIN_PASSWORD = show enpass
+# SEMAPHORE_ACCESS_KEY_ENCRYPTION = show enpass
+# MYSQL_ROOT_PASSWORD = show enpass
+# MYSQL_PASSWORD = show enpass
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_portainer
+#
+
+version: '3'
+
+services:
+  semaphore_app:
+    image: semaphoreui/semaphore:latest
+	container_name: semaphore_app
+    restart: unless-stopped
+	depends_on:
+      - semaphore_db
+    environment:
+        SEMAPHORE_DB_USER: semaphore
+        SEMAPHORE_DB_PASS: $SEMAPHORE_DB_PASS
+        SEMAPHORE_DB_HOST: mysql
+        SEMAPHORE_DB_PORT: 3306
+        SEMAPHORE_DB_DIALECT: bolt
+        SEMAPHORE_DB: semaphore
+        SEMAPHORE_PLAYBOOK_PATH: /tmp/semaphore/
+        SEMAPHORE_ADMIN_PASSWORD: $SEMAPHORE_ADMIN_PASSWORD
+        SEMAPHORE_ADMIN_NAME: Admin
+        SEMAPHORE_ADMIN_EMAIL: admin@example.com
+        SEMAPHORE_ADMIN: admin
+        SEMAPHORE_ACCESS_KEY_ENCRYPTION: $SEMAPHORE_ACCESS_KEY_ENCRYPTION
+        ANSIBLE_HOST_KEY_CHECKING: no
+    volumes:
+      - vol_data:/data
+      - vol_data:/var/run/docker.sock
+	networks:
+      - b_net_lan_default:
+        ipv4_address: 172.28.1.141
+	ports:
+      - 3000:3000
+  semaphore_db:
+    image: mysql:8.0
+	container_name: semaphore_db
+	restart: unless-stopped
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: no
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: semaphore
+      MYSQL_USER: semaphore
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+	volumes:
+      - vol_data:/var/lib/mysql
+	networks:
+      - b_net_lan_default:
+        ipv4_address: 172.28.1.142
+volumes:
+  vol_db:
+networks:
+  b_net_lan_default:
+    external: true
