@@ -21,7 +21,8 @@ services:
    volumes:
       - vol_data:/config
     networks:
-      - b_net_lan_default:        
+      - b_net_lan_default:
+        
    ports:
       - 8181:8181 #  <Host Port>:<Container Port>
 volumes:
