@@ -48,11 +48,9 @@ services:
     networks:
       q_net_lan_bookstack:
         ipv4_address: 10.10.10.172
-
 volumes:
   vol_data:
   vol_db:
-
 networks:
   q_net_lan_bookstack:
    external: true
