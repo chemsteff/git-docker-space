@@ -1,0 +1,59 @@
+---
+# Simple docker-compose.yml
+#
+# Portainer environment variables:
+# PATH = /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+# STASH_STASH = /data
+# STASH_CONFIG_FILE = /root/.stash/config.yml
+# STASH_GENERATED = /generated
+# STASH_METADATA = /metadata
+# STASH_CACHE = /cache
+# STASH_PORT = 80
+# WATCHTOWER_NOTIFICATION_GOTIFY_URL = change it!
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_stash
+#
+
+version: 3.4
+
+services:
+  stash:
+  image: stashapp/stash:latest
+  container_name: stash_app
+  restart: unless-stopped
+	labels:
+     - com.centurylinklabs.watchtower.enable=true
+  security_opt:
+     - no-new-privileges=true
+	environment:
+     - PATH: $PATH
+     - STASH_STASH: $STASH_STASH
+     - STASH_CONFIG_FILE: $STASH_CONFIG_FILE
+     - STASH_GENERATED: $STASH_GENERATED
+     - STASH_METADATA: $STASH_METADATA
+     - STASH_CACHE: $STASH_CACHE
+     - STASH_PORT: $STASH_PORT
+	volumes:
+     - ./etc/localtime:/etc/localtime:ro
+     - ./share/Container/stash/config:/root/.stash
+     - ./share/PMoviez:/data
+     - ./share/Container/stash/metadata:/metadata
+     - ./share/Container/stash/cache:/cache
+     - ./share/Container/stash/blobs:/blobs
+     - ./share/Container/stash/generated:/generated
+  networks:
+     - q_net_lan_stash:
+         ipv4_address: 10.10.10.200
+	ports:
+     - "80:80/tcp" # <Host Port>:<Container Port> Stashr Web UI https://host_ip
+  logging:
+     driver: "json-file"
+     options:
+       max-file: "10"
+       max-size: "2m"
+networks:
+  q_net_lan_watchtower:
+     external: true
+
+      
