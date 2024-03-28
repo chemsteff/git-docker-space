@@ -2,7 +2,7 @@
 # Simple docker-compose.yml
 #
 # Portainer: Environment variables
-# MYSQL_ROOT_PASSWORD = the password is in enpass
+# MYSQL_ROOT_PASSWORD = show enpass
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_bookstack
@@ -12,7 +12,7 @@ version: "2"
 
 services:
   bookstack_app:
-    image: lscr.io/linuxserver/bookstack
+    image: lscr.io/linuxserver/bookstack:latest
     container_name: bookstack_app
     restart: unless-stopped
     depends_on:
