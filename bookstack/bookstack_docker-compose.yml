@@ -8,7 +8,7 @@
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_bookstack
 #
 
-version: "2"
+version: "3"
 
 services:
   bookstack_app:
@@ -31,7 +31,7 @@ services:
       - vol_data:/config
     networks:
       q_net_lan_bookstack:
-        ipv4_address: 10.10.10.171
+      ipv4_address: 10.10.10.171
     ports:
       - 80:80
   bookstack_db:
@@ -47,7 +47,7 @@ services:
       - vol_db:/var/lib/mysql
     networks:
       q_net_lan_bookstack:
-        ipv4_address: 10.10.10.172
+      ipv4_address: 10.10.10.172
 volumes:
   vol_data:
   vol_db:
