@@ -5,32 +5,32 @@
 # name-xyz = show enpass
 #
 
-version: '3'
+version: "3"
 
 services:
-  uptime-kuma:
+   uptime-kuma:
     image: louislam/uptime-kuma:1
-    container_name: uptime-kuma_app
+    container_name: uptime-kuma
     restart: unless-stopped
-	security_opt:
-      - no-new-privileges:true
+    security_opt:
+     - no-new-privileges:true
     environment:
-      - TZ: Europe/Zurich
-	volumes:
-      - vol_data:/app/data
+     TZ: Europe/Zurich
+    volumes:
+     - vol_data:/app/data
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+     - com.centurylinklabs.watchtower.enable=true
     networks:
-      b_net_lan_default:
-        ipv4_address: 172.28.1.198
-      b_net_int_default:
-       ipv4_address: 172.25.1.198  
+     b_net_lan_default:
+      ipv4_address: 172.28.1.158
+     b_net_int_default:
+      ipv4_address: 172.25.1.158
     ports:
-      - 3991:3001  #  <Host Port>:<Container Port> Uptime-kuma Web UI https://host_ip:3001      
+     - 58101:3001  #  <Host Port>:<Container Port> Uptime-kuma Web UI https://host_ip:3001      
 volumes:
-  vol_data: 
+  vol_data:
 networks:
   b_net_lan_default:
-   external: true
+    external: true
   b_net_int_default:
-   external: true
+    external: true
