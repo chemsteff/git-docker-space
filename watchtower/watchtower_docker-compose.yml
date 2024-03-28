@@ -16,6 +16,8 @@ services:
     image: containrrr/watchtower:latest
     container_name: watchtower_app
     restart: unless-stopped
+     labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - TZ: Europe/Zurich
       - WATCHTOWER_CLEANUP: true
@@ -28,9 +30,7 @@ services:
       - WATCHTOWER_SCHEDULE: 0 0 2 * * *
       - WATCHTOWER_NOTIFICATIONS: gotify
       - WATCHTOWER_NOTIFICATION_GOTIFY_URL: $WATCHTOWER_NOTIFICATION_GOTIFY_URL
-      - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: $WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+      - WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: $WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN    
     security_opt:
       - no-new-privileges=true
     volumes:
@@ -41,7 +41,7 @@ services:
       - q_net_lan_watchtower:
           ipv4_address: 10.10.10.199
     ports:
-      - 80:8080 # Watchtower Web UI https://host_ip
+      - 80:8080 # <Host Port>:<Container Port> Watchtower Web UI https://host_ip
 volumes:
   vol_data:  
 networks:
