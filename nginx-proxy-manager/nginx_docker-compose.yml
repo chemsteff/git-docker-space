@@ -1,34 +1,42 @@
+---
+# Simple docker-compose.yml
 #
-# Portainer: Environment variables
-# name-xyz = the password is in enpass
+# Portainer environment variables:
+# name-xyz = show enpass
 #
 # Qnap: Create networks:
-# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 nginx-network_default
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_nginx
+# docker network create -d bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.1.254 b_net_lan_default
+# docker network create -d bridge --subnet=172.29.1.0/24 --ip-range=172.29.1.0/24 --gateway=172.29.1.254 b_net_dmz_default
 #
 
 version: "3.8"
 
-networks:
-  nginx-network_default:
-    external: true
-
 services:
-  nginx-proxy:
+  nginx-proxy_app:
     image: 'docker.io/jc21/nginx-proxy-manager:2.10.4'
-    container_name: nginx-proxy
+    container_name: nginx-proxy_app
     restart: always
     environment:
       - PUID=1000
       - PGID=1000
     volumes:
-      - vol_config:/data:/data
-      - vol_config:/letsencrypt:/etc/letsencrypt
+      - vol_data:/data:/data
+      - vol_data:/letsencrypt:/etc/letsencrypt
     networks:
-      nginx-network_default:
-       ipv4_address: 10.10.10.181
+      q_net_lan_nginx:
+         ipv4_address: 10.10.10.181
+      b_net_lan_default:
+      b_net_dmz_default:
     ports:
       - '80:80'
-      - '443:443'
-    
+      - '443:443'    
 volumes:
-  vol_config:
+  vol_data:
+networks:
+   q_net_lan_nginx:
+      external: true
+    b_net_lan_default::
+      external: true
+    b_net_dmz_default:
+      external: true
