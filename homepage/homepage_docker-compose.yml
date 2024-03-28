@@ -21,7 +21,7 @@ services:
       - vol_data:/var/run/docker.sock:ro
     networks:
       b_net_lan_default:
-        ipv4_address: 172.28.1.145
+        ipv4_address: 172.28.1.146
     ports:
       - 8146:3000 # <Host Port>:<Container Port>
 volumes:
