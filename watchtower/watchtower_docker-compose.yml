@@ -16,7 +16,7 @@ services:
     image: containrrr/watchtower:latest
     container_name: watchtower_app
     restart: unless-stopped
-     labels:
+    labels:
       - com.centurylinklabs.watchtower.enable=true
     environment:
       - TZ: Europe/Zurich
