@@ -18,8 +18,8 @@ services:
       - TZ: "Europe/Zurich"
    volumes:
       - vol_data:/config
-   networks:
-      b_net_lan_default:        
+    networks:
+      - b_net_lan_default:        
    ports:
       - 8181:8181
 volumes:
