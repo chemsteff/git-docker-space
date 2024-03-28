@@ -12,10 +12,24 @@
 version: '3'
 
 services:
-   guacamole_db:
-    image: mariadb:10.9.5
-    container_name: guacamole_db
+   guacd_app:
+    image: guacamole/guacd:latest
+    container_name: guacd_app
     restart: unless-stopped
+    labels:
+     - com.centurylinklabs.watchtower.enable=true
+    volumes:
+      - vol_data:/drive:/drive:rw
+      - vol_data:/record:/record:rw
+    networks:
+       b_net_lan_default:    
+         ipv4_address: 172.28.1.141       
+   guac_db:
+    image: mariadb:10.9.5
+    container_name: guac_db
+    restart: unless-stopped
+    labels:
+     - com.centurylinklabs.watchtower.enable=true
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       MYSQL_DATABASE: guacamole_db
@@ -25,25 +39,19 @@ services:
       - vol_db:/db-data:/var/lib/mysql
     networks:
        b_net_lan_default:
-  guacd_app:
-    image: guacamole/guacd:latest
-    container_name: guacd_app
-    restart: unless-stopped
-    volumes:
-      - vol_data:/drive:/drive:rw
-      - vol_data:/record:/record:rw
-    networks:
-       b_net_lan_default:        
-  guacamole_app:
+         ipv4_address: 172.28.1.142
+   guacamole_app:
     image: guacamole/guacamole:latest
     container_name: guacamole_app
     restart: unless-stopped
+    labels:
+     - com.centurylinklabs.watchtower.enable=true
     depends_on:
-      - guacamole_db
+      - guac_db
       - guacd_app
     environment:
-      GUACD_HOSTNAME: guacd
-      MYSQL_HOSTNAME: guacdb
+      GUACD_HOSTNAME: guacd_app
+      MYSQL_HOSTNAME: guac_db
       MYSQL_DATABASE: guacamole_db
       MYSQL_USER: guacamole_user
       MYSQL_PASSWORD: $MYSQL_PASSWORD
@@ -52,7 +60,7 @@ services:
       - vol_data:/config
     networks:
       b_net_lan_default:
-      ipv4_address: 172.28.1.141
+       ipv4_address: 172.28.1.143
     ports:
       - 8010:8080      
 volumes:
