@@ -13,19 +13,23 @@ version: "3"
 services:
   dozzle:
     image: amir20/dozzle:latest
-    container_name: dozzle_app
+    container_name: dozzle
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      q_net_lan_dozzle:
-        ipv4_address: 10.10.10.182
+      b_net_lan_default:
+        ipv4_address: 172.28.1.159
+      b_net_int_default:
+        ipv4_address: 172.25.1.159
     ports:
-      - 80:8080 # <Host Port>:<Container Port>
+      - 59101:8080 # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
-  q_net_lan_dozzle:
+  b_net_lan_default:
+   external: true
+  b_net_int_default:
    external: true
