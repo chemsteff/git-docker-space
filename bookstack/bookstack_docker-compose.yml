@@ -12,29 +12,29 @@
 version: "3"
 
 services:
-  bookstack_app:
+  bookstack:
     image: lscr.io/linuxserver/bookstack:latest
-    container_name: bookstack_app
+    container_name: bookstack
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
     depends_on:
       - bookstack_db
     environment:
-      - PUID: 1000
-      - PGID: 1000
-      - APP_URL: $APP_UR
-      - DB_HOST: bookstack_db
-      - DB_PORT: 3306
-      - DB_USER: bookstack # do not change
-      - DB_PASS: secret # do not change
-      - DB_DATABASE: bookstackapp # do not change
-      - APP_DEFAULT_DARK_MODE: true
+      PUID: 1000
+      PGID: 1000
+      APP_URL: $APP_UR
+      DB_HOST: bookstack_db
+      DB_PORT: 3306
+      DB_USER: bookstack # do not change
+      DB_PASS: secret # do not change
+      DB_DATABASE: bookstackapp # do not change
+      APP_DEFAULT_DARK_MODE: true
     volumes:
       - vol_data:/config
     networks:
       q_net_lan_bookstack:
-      ipv4_address: 10.10.10.171
+        ipv4_address: 10.10.10.171
     ports:
       - 80:80 # <Host Port>:<Container Port>
   bookstack_db:
@@ -44,15 +44,15 @@ services:
     labels:
       - com.centurylinklabs.watchtower.enable=true
     environment:
-      - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD # change! show-pass
-      - MYSQL_DATABASE: bookstackapp
-      - MYSQL_USER: bookstack # do not change
-      - MYSQL_PASSWORD: secret # do not change
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD # change! show-pass
+      MYSQL_DATABASE: bookstackapp
+      MYSQL_USER: bookstack # do not change
+      MYSQL_PASSWORD: secret # do not change
     volumes:
       - vol_db:/var/lib/mysql
     networks:
       q_net_lan_bookstack:
-      ipv4_address: 10.10.10.172
+         ipv4_address: 10.10.10.172
 volumes:
   vol_data:
   vol_db:
