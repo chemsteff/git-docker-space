@@ -15,9 +15,9 @@
 version: '3'
 
 services:
-  semaphore_app:
+  semaphore:
     image: semaphoreui/semaphore:latest
-    container_name: semaphore_app
+    container_name: semaphore
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
@@ -26,7 +26,7 @@ services:
     environment:
         SEMAPHORE_DB_USER: semaphore
         SEMAPHORE_DB_PASS: $SEMAPHORE_DB_PASS
-        SEMAPHORE_DB_HOST: mysql
+        SEMAPHORE_DB_HOST: semaphore_db
         SEMAPHORE_DB_PORT: 3306
         SEMAPHORE_DB_DIALECT: bolt
         SEMAPHORE_DB: semaphore
@@ -42,7 +42,7 @@ services:
       - vol_data:/var/run/docker.sock
     networks:
       - b_net_lan_default:
-        ipv4_address: 172.28.1.141
+          ipv4_address: 172.28.1.151
     ports:
       - 3000:3000 # <Host Port>:<Container Port>
   semaphore_db:
@@ -61,7 +61,7 @@ services:
       - vol_data:/var/lib/mysql
     networks:
       - b_net_lan_default:
-        ipv4_address: 172.28.1.142
+        ipv4_address: 172.28.1.152
 volumes:
   vol_db:
 networks:
