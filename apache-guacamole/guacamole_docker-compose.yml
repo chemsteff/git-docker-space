@@ -45,7 +45,7 @@ services:
       b_net_lan_default:
         ipv4_address: 172.28.1.143
     ports:
-      - 8080:8080/tcp # <Host Port>:<Container Port>
+      - 8141:8080/tcp # <Host Port>:<Container Port>
   guacd:
     image: guacamole/guacd:latest
     container_name: guacd
