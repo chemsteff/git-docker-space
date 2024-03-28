@@ -1,29 +1,29 @@
+---
+# Simple docker-compose.yml
 #
-# Portainer: Environment variables
+# Portainer environment variables:
 # name-xyz = the password is in enpass
 #
 # Qnap: Create networks:
-# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 dozzle-network_default
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_dozzle
 #
 
 version: "3"
 
-networks:
-  dozzle-network_default:
-   external: true
-
 services:
-  dozzle:
+  dozzle_app:
     image: amir20/dozzle:latest
     container_name: dozzle_app
     restart: unless-stopped
     volumes:
-      - vol_config:/var/run/docker.sock:/var/run/docker.sock:ro
+      - vol_data:/var/run/docker.sock:/var/run/docker.sock:ro
     networks:
-      dozzle-network_default:
+      q_net_lan_dozzle:
         ipv4_address: 10.10.10.183
     ports:
       - 80:80
-
 volumes:
   vol_config:
+networks:
+  q_net_lan_dozzle:
+   external: true
