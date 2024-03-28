@@ -1,19 +1,17 @@
+---
+# Simple docker-compose.yml
 #
-# Portainer: Environment variables
-# WEBPASSWORD = the password is in enpass
+# Portainer environment variables:
+# WEBPASSWORD = show enpass
 #
 # Qnap: Create networks:
-# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 dozzle-network_default
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_pihole
 #
 
 version: "3"
 
-networks:
-  pihole-network_default:
-   external: true
-
 services:
-  pihole:
+  pihole_app:
     container_name: pihole_app
     image: pihole/pihole:latest
     restart: always
@@ -21,15 +19,17 @@ services:
       TZ: "Europe/Zurich"
       WEBPASSWORD: "show-pass"
     volumes:
-      - "vol_config:/etc-pihole:/etc/pihole"
-      - "vol_config:/etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "vol_data:/etc-pihole:/etc/pihole"
+      - "vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d"
     networks:
-      pihole-network_default:
-       ipv4_address: 10.10.10.253
+      q_net_lan_pihole:
+        ipv4_address: 10.10.10.253
     ports:
       - "53:53/tcp"
       - "53:53/udp"
       - "80:80/tcp"
-
 volumes:
-  vol_config:
+  vol_data:
+networks:
+ q_net_lan_pihole:
+   external: true
