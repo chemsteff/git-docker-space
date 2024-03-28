@@ -19,6 +19,8 @@ services:
     image: semaphoreui/semaphore:latest
     container_name: semaphore_app
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     depends_on:
     - semaphore_db
     environment:
@@ -42,11 +44,13 @@ services:
       - b_net_lan_default:
         ipv4_address: 172.28.1.141
     ports:
-      - 3000:3000
+      - 3000:3000 # <Host Port>:<Container Port>
   semaphore_db:
     image: mysql:8.0
     container_name: semaphore_db
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: no
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
