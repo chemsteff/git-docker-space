@@ -17,10 +17,10 @@ services:
     restart: always
     volumes:
       - vol_data:/data
-	  - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - 8000:8000 # Portainer API
-      - 443:9443	# Portainer Web UI https://host_ip:443
+      - 443:9443 # Portainer Web UI https://host_ip:443
     networks:
       - q_net_lan_portainer:
         ipv4_address: 10.10.10.191
