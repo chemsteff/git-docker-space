@@ -25,7 +25,13 @@ services:
       - vol_data:/letsencrypt:/etc/letsencrypt
     networks:
       q_net_lan_nginx:
-         ipv4_address: 10.10.10.181
+         ipv4_address: 10.10.10.181     
+      q_net_lan_pihole:
+        ipv4_address: 10.10.10.181
+      q_net_lan_dozzle:
+        ipv4_address: 10.10.10.181
+      q_net_lan_bookstack:
+        ipv4_address: 10.10.10.181
       b_net_lan_default:
       b_net_dmz_default:
     ports:
@@ -36,7 +42,14 @@ volumes:
 networks:
    q_net_lan_nginx:
       external: true
-    b_net_lan_default::
+   q_net_lan_pihole:
       external: true
-    b_net_dmz_default:
+   q_net_lan_dozzle:
       external: true
+   q_net_lan_bookstack:
+      external: true  
+   b_net_lan_default::
+      external: true
+   b_net_dmz_default:
+      external: true   
+      
