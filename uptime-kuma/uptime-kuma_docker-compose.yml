@@ -10,7 +10,7 @@ version: '3'
 services:
   uptime-kuma:
     image: louislam/uptime-kuma:1
-    container_name: uptime-kuma_app
+    container_name: uptime-kuma
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
