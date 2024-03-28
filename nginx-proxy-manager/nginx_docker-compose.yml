@@ -13,9 +13,9 @@
 version: "3"
 
 services:
-  nginx-proxy_app:
+  nginx-proxy:
     image: 'docker.io/jc21/nginx-proxy-manager:2.10.4'
-    container_name: nginx-proxy_app
+    container_name: nginx-proxy
     restart: always
     labels:
       - com.centurylinklabs.watchtower.enable=true
