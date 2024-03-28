@@ -1,0 +1,51 @@
+---
+# Simple docker-compose.yml
+#
+# Portainer environment variables:
+# SEMAPHORE_DB_PASS = show enpass
+# SEMAPHORE_ADMIN_PASSWORD = show enpass
+# SEMAPHORE_ACCESS_KEY_ENCRYPTION = show enpass
+# MYSQL_ROOT_PASSWORD = show enpass
+# MYSQL_PASSWORD = show enpass
+#
+version: "3"
+
+services:
+  ddns-updater_app:
+    image: qmcgaw/ddns-updater:latest
+    container_name: ddns-updater_app
+    restart: unless-stopped
+    environment:
+      - CONFIG=
+      - PERIOD=5m
+      - UPDATE_COOLDOWN_PERIOD=5m
+      - PUBLICIP_FETCHERS=all
+      - PUBLICIP_HTTP_PROVIDERS=all
+      - PUBLICIPV4_HTTP_PROVIDERS=all
+      - PUBLICIPV6_HTTP_PROVIDERS=all
+      - PUBLICIP_DNS_PROVIDERS=all
+      - PUBLICIP_DNS_TIMEOUT=3s
+      - HTTP_TIMEOUT=10s
+      # Web UI
+      - LISTENING_ADDRESS=:8000
+      - ROOT_URL=/
+      # Backup
+      - BACKUP_PERIOD=0 # 0 to disable
+      - BACKUP_DIRECTORY=/updater/data
+      # Other
+      - LOG_LEVEL=info
+      - LOG_CALLER=hidden
+      - SHOUTRRR_ADDRESSES=
+    volumes:
+      - vol_data:/data:/updater/data
+	networks:
+      - b_net_lan_default:
+        ipv4_address: 172.28.1.143
+	ports:
+      - 8000:8000/tcp
+volumes:
+  vol_data:
+networks:
+  b_net_lan_default:
+    external: true
+    
