@@ -2,7 +2,7 @@
 # Simple docker-compose.yml
 #
 # Portainer environment variables:
-# name-xyz = the password is in enpass
+# name-xyz = show enpass
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_dozzle
@@ -23,7 +23,7 @@ services:
     ports:
       - 80:80
 volumes:
-  vol_config:
+  vol_data:
 networks:
   q_net_lan_dozzle:
    external: true
