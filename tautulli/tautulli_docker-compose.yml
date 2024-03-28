@@ -1,33 +1,29 @@
+---
+# Simple docker-compose.yml
 #
-# Portainer: Environment variables
-# name-xyz = the password is in enpass
-#
-# Qnap: Create networks:
-# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 dozzle-network_default
+# Portainer environment variables:
+# name-xyz = show enpass
 #
 
 version: '3'
 
-networks:
-  shared-network_default::
-   external: false
-
 services:
-  tautulli:
-    image: ghcr.io/tautulli/tautulli
-    container_name: tautulli
+  tautulli_app:
+    image: ghcr.io/tautulli/tautulli:latest
+    container_name: tautulli_app
     restart: unless-stopped
     environment:
       - PUID: 1000
       - PGID: 1000
       - TZ: "Europe/Zurich"
    volumes:
-      - vol_config:/config
+      - vol_data:/config
    networks:
-      shared-network_default:
-        ipv4_address: 10.10.10.141
+      b_net_lan_default:        
    ports:
       - 8181:8181
-
 volumes:
-  vol_config:
+  vol_data:
+networks:
+   b_net_lan_default:
+   external: true
