@@ -11,9 +11,9 @@
 version: "3"
 
 services:
-  ddns-updater_app:
+  ddns-updater:
     image: qmcgaw/ddns-updater:latest
-    container_name: ddns-updater_app
+    container_name: ddns-updater
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
@@ -42,9 +42,9 @@ services:
       - vol_data:/data:/updater/data
     networks:
       - b_net_lan_default:
-        ipv4_address: 172.28.1.143
+        ipv4_address: 172.28.1.145
     ports:
-      - 8000:8000/tcp # <Host Port>:<Container Port>
+      - 8145:8000/tcp # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
