@@ -17,11 +17,11 @@ services:
     security_opt:
       - no-new-privileges:true
     environment:
-      - TZ: Europe/Zurich
+      TZ: Europe/Zurich
     volumes:
       - vol_data:/app/data    
     networks:
-      - b_net_lan_default:
+      b_net_lan_default:
           ipv4_address: 172.28.1.158
     ports:
       - 8158:3001  #  <Host Port>:<Container Port> Uptime-kuma Web UI https://host_ip:8158  
