@@ -54,12 +54,10 @@ services:
       b_net_lan_default:
         ipv4_address: 172.28.1.141
     ports:
-      - 8010:8080
-      
+      - 8010:8080      
 volumes:
   vol_data:
   vol_db:
-
 networks:
   b_net_lan_default:
     external: true
