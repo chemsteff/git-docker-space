@@ -23,7 +23,7 @@ services:
       q_net_lan_dozzle:
         ipv4_address: 10.10.10.182
     ports:
-      - 80:80 # <Host Port>:<Container Port>
+      - 80:8080 # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
