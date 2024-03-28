@@ -6,8 +6,7 @@
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_nginx
-# docker network create -d bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.1.254 b_net_lan_default
-# docker network create -d bridge --subnet=172.29.1.0/24 --ip-range=172.29.1.0/24 --gateway=172.29.1.254 b_net_dmz_default
+# docker network create -d bridge --subnet=172.25.1.0/24 --ip-range=172.25.1.0/24 --gateway=172.25.1.254 --internal b_net_int_default
 #
 
 version: "3"
@@ -27,17 +26,9 @@ services:
       - vol_data:/letsencrypt:/etc/letsencrypt
     networks:
       q_net_lan_nginx:
-        ipv4_address: 10.10.10.194
-      q_net_lan_pihole:
-        ipv4_address: 10.10.10.195
-      q_net_lan_dozzle:
-        ipv4_address: 10.10.10.196
-      q_net_lan_bookstack:
-        ipv4_address: 10.10.10.197
-      b_net_lan_default:
-        ipv4_address: 172.28.1.194
-      b_net_dmz_default:
-        ipv4_address: 172.29.1.194
+        ipv4_address: 10.10.10.194  
+      b_net_int_default:
+        ipv4_address: 172.25.1.195
     ports:
       - 80:80 # <port:host> : <port:container>
       - 443:443 # <port:host> : <port:container>      
@@ -46,16 +37,5 @@ volumes:
 networks:
    q_net_lan_nginx:
       external: true
-   q_net_lan_pihole:
-      external: true
-   q_net_lan_dozzle:
-      external: true
-   q_net_lan_bookstack:
-      external: true
-   b_net_lan_default::
-      external: true
-   b_net_dmz_default:
-      external: true
-
-
-      
+   b_net_int_default:
+      external: true      
