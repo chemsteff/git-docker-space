@@ -17,6 +17,8 @@ services:
     image: 'docker.io/jc21/nginx-proxy-manager:2.10.4'
     container_name: nginx-proxy_app
     restart: always
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - PUID=1000
       - PGID=1000
@@ -25,18 +27,20 @@ services:
       - vol_data:/letsencrypt:/etc/letsencrypt
     networks:
       q_net_lan_nginx:
-      ipv4_address: 10.10.10.181     
+        ipv4_address: 10.10.10.181
       q_net_lan_pihole:
-      ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.181
       q_net_lan_dozzle:
-      ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.181
       q_net_lan_bookstack:
-      ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.181
       b_net_lan_default:
+        ipv4_address: 172.28.1.181
       b_net_dmz_default:
+        ipv4_address: 172.28.1.182
     ports:
-      - 80:80
-      - 443:443
+      - 80:80 # <Host Port>:<Container Port>
+      - 443:443 # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
@@ -47,9 +51,11 @@ networks:
    q_net_lan_dozzle:
       external: true
    q_net_lan_bookstack:
-      external: true  
+      external: true
    b_net_lan_default::
       external: true
    b_net_dmz_default:
-      external: true   
+      external: true
+
+
       
