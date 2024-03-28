@@ -11,14 +11,14 @@
 version: "3"
 
 services:
-  dozzle_app:
+  dozzle:
     image: amir20/dozzle:latest
     container_name: dozzle_app
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
     volumes:
-      - vol_data:/var/run/docker.sock:/var/run/docker.sock:ro
+      - ./var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       q_net_lan_dozzle:
         ipv4_address: 10.10.10.182
