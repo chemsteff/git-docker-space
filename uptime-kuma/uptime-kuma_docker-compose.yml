@@ -12,14 +12,14 @@ services:
     image: louislam/uptime-kuma:1
     container_name: uptime-kuma_app
     restart: unless-stopped
-	security_opt:
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    security_opt:
       - no-new-privileges:true
     environment:
       - TZ: Europe/Zurich
-	volumes:
-      - vol_data:/app/data
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
+    volumes:
+      - vol_data:/app/data    
     networks:
       - b_net_lan_default:
           ipv4_address: 172.28.1.198
