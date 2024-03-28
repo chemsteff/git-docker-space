@@ -21,8 +21,8 @@ services:
     volumes:
       - "vol_data:/etc-pihole:/etc/pihole"
       - "vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d"
-    networks:
-      q_net_lan_pihole:
+networks:
+      - q_net_lan_pihole:
         ipv4_address: 10.10.10.253
     ports:
       - "53:53/tcp"
