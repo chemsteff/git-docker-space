@@ -2,7 +2,7 @@
 # Simple docker-compose.yml
 #
 # Portainer environment variables:
-# name-xyz = the password is in enpass
+# name-xyz = show enpass
 #
 
 version: "3.3"
@@ -21,7 +21,6 @@ services:
       b_net_lan_default:        
     ports:
       - 3000:3000
-
 volumes:
   vol_data:
 networks:
