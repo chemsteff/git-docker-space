@@ -8,6 +8,17 @@
 # Qnap: Create networks:
 # docker network create -d bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.1.254 b_net_lan_default
 #
+#  Within the 'guacamole' service. This will expose the guacamole webinterface directly
+#  on port 8080 and you can use it for your own purposes.
+#  Note: Guacamole is available on :8080/guacamole, not /.
+#
+# The initial login to the guacamole webinterface is:
+#
+#     Username: guacadmin
+#     Password: guacadmin
+#
+# Make sure you change it immediately!
+#
 
 version: '3'
 
@@ -62,7 +73,7 @@ services:
       b_net_lan_default:
        ipv4_address: 172.28.1.143
     ports:
-      - 8010:8080 # <Host Port>:<Container Port>
+      - - 8080:8080/tcp # <Host Port>:<Container Port>
 volumes:
   vol_data:
   vol_db:
