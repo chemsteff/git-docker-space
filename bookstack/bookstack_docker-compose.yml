@@ -16,6 +16,8 @@ services:
     image: lscr.io/linuxserver/bookstack:latest
     container_name: bookstack_app
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     depends_on:
       - bookstack_db
     environment:
@@ -34,11 +36,13 @@ services:
       q_net_lan_bookstack:
       ipv4_address: 10.10.10.171
     ports:
-      - 80:80
+      - 80:80 # <Host Port>:<Container Port>
   bookstack_db:
     image: lscr.io/linuxserver/mariadb
     container_name: bookstack_db
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD # change! show-pass
       - MYSQL_DATABASE: bookstackapp
