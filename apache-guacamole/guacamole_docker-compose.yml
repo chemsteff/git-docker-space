@@ -47,12 +47,12 @@ services:
       MYSQL_DATABASE: guacamole_db
       MYSQL_USER: guacamole_user
       MYSQL_PASSWORD: $MYSQL_PASSWORD
-      TOTP_ENABLED: "true"
+      TOTP_ENABLED: true
     volumes:
       - vol_data:/config
     networks:
       b_net_lan_default:
-        ipv4_address: 172.28.1.141
+      ipv4_address: 172.28.1.141
     ports:
       - 8010:8080      
 volumes:
