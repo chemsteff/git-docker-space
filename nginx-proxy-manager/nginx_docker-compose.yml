@@ -27,20 +27,20 @@ services:
       - vol_data:/letsencrypt:/etc/letsencrypt
     networks:
       q_net_lan_nginx:
-        ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.194
       q_net_lan_pihole:
-        ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.195
       q_net_lan_dozzle:
-        ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.196
       q_net_lan_bookstack:
-        ipv4_address: 10.10.10.181
+        ipv4_address: 10.10.10.197
       b_net_lan_default:
-        ipv4_address: 172.28.1.181
+        ipv4_address: 172.28.1.194
       b_net_dmz_default:
-        ipv4_address: 172.28.1.182
+        ipv4_address: 172.28.1.195
     ports:
       - 80:80 # <Host Port>:<Container Port>
-      - 443:443 # <Host Port>:<Container Port>
+      - 443:443 # <Host Port>:<Container Port>      
 volumes:
   vol_data:
 networks:
