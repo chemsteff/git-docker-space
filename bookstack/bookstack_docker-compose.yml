@@ -35,6 +35,8 @@ services:
     networks:
       q_net_lan_bookstack:
         ipv4_address: 10.10.10.171
+      b_net_int_default:
+        ipv4_address: 172.25.1.171
     ports:
       - 80:80 # <Host Port>:<Container Port>
   bookstack_db:
@@ -51,11 +53,13 @@ services:
     volumes:
       - vol_db:/var/lib/mysql
     networks:
-      q_net_lan_bookstack:
-         ipv4_address: 10.10.10.172
+      b_net_int_default:
+         ipv4_address: 172.25.1.172
 volumes:
   vol_data:
   vol_db:
 networks:
   q_net_lan_bookstack:
+   external: true
+  b_net_int_default:
    external: true
