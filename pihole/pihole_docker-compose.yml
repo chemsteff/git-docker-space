@@ -11,25 +11,25 @@
 version: "3"
 
 services:
-  pihole_app:
-    container_name: pihole_app
-    image: pihole/pihole:latest
-    restart: always
-    labels:
-      - com.centurylinklabs.watchtower.enable=true
-    environment:
-      TZ: Europe/Zurich
-      WEBPASSWORD: $WEBPASSWORD
-    volumes:
-      - vol_data:/etc-pihole:/etc/pihole
-      - vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d
-networks:
-      - q_net_lan_pihole:
-        ipv4_address: 10.10.10.253
-    ports:
-      - 53:53/tcp # <Host Port>:<Container Port>
-      - 53:53/udp # <Host Port>:<Container Port>
-      - 80:80/tcp # <Host Port>:<Container Port>
+    pihole:
+      container_name: pihole
+      image: pihole/pihole:latest
+      restart: always
+      labels:
+        - com.centurylinklabs.watchtower.enable=true
+      environment:
+        TZ: Europe/Zurich
+        WEBPASSWORD: $WEBPASSWORD
+      volumes:
+        - vol_data:/etc-pihole:/etc/pihole
+        - vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d
+      networks:
+        - q_net_lan_pihole:
+          ipv4_address: 10.10.10.253
+      ports:
+        - 53:53/tcp # <Host Port>:<Container Port>
+        - 53:53/udp # <Host Port>:<Container Port>
+        - 80:80/tcp # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
