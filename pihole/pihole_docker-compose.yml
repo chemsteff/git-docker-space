@@ -14,14 +14,13 @@ services:
     pihole:
       container_name: pihole
       image: pihole/pihole:latest
-      hostname: pihole.brainrouting.ccom 
+      hostname: pihole.domain.xyz 
       restart: always
       labels:
         - com.centurylinklabs.watchtower.enable=true
       environment:
         TZ: Europe/Zurich
-        WEBPASSWORD: $WEBPASSWORD
-        
+        WEBPASSWORD: $WEBPASSWORD        
       volumes:
         - vol_data:/etc-pihole:/etc/pihole
         - vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d
