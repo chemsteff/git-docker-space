@@ -21,7 +21,7 @@ services:
       - vol_data:/var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       q_net_lan_dozzle:
-        ipv4_address: 10.10.10.183
+        ipv4_address: 10.10.10.182
     ports:
       - 80:80 # <Host Port>:<Container Port>
 volumes:
