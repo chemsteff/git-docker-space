@@ -3,6 +3,7 @@
 #
 # Portainer: Environment variables
 # MYSQL_ROOT_PASSWORD = show enpass
+# APP_UR = change me!
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 qnet_lan_bookstack
@@ -20,7 +21,7 @@ services:
     environment:
       - PUID: 1000
       - PGID: 1000
-      - APP_URL: http://bookstack.brainrouting.com
+      - APP_URL: $APP_UR
       - DB_HOST: bookstack_db
       - DB_PORT: 3306
       - DB_USER: bookstack # do not change
