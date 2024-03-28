@@ -2,7 +2,7 @@
 # Simple docker-compose.yml
 #
 # Portainer environment variables:
-# name-xyz = show enpass
+# WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN = show enpass
 #
 # Qnap: Create networks:
 # docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_watchtower
@@ -11,33 +11,36 @@
 version: '3'
 
 services:
-  watchtower:
-    image: containrrr/watchtower:latest
-    container_name: watchtower_app
+	watchtower:
+    	image: containrrr/watchtower:latest
+    	container_name: watchtower_app
 	restart: unless-stopped
-    environment:
-      - TZ: Europe/Zurich
-      - WATCHTOWER_CLEANUP: true
-	  - WATCHTOWER_LABEL_ENABLE: true
-      - WATCHTOWER_INCLUDE_STOPPED: true
-	  - WATCHTOWER_INCLUDE_RESTARTING: true
-      - WATCHTOWER_ROLLING_RESTARTING: true
-      - WATCHTOWER_REVIVE_STOPPED: false
-	  - WATCHTOWER_INTERVAL: 200
-      - WATCHTOWER_SCHEDULE: 0 0 2 * * *
-    labels:
-     - "com.centurylinklabs.watchtower.enable=true
+    	environment:
+		- TZ: Europe/Zurich
+      		- WATCHTOWER_CLEANUP: true
+      		- WATCHTOWER_LABEL_ENABLE: true
+      		- WATCHTOWER_INCLUDE_STOPPED: true
+      		- WATCHTOWER_INCLUDE_RESTARTING: true
+      		- WATCHTOWER_ROLLING_RESTARTING: true
+      		- WATCHTOWER_REVIVE_STOPPED: false
+      		- WATCHTOWER_INTERVAL: 200
+      		- WATCHTOWER_SCHEDULE: 0 0 2 * * *
+      		- WATCHTOWER_NOTIFICATIONS: gotify
+      		- WATCHTOWER_NOTIFICATION_GOTIFY_URL: http://gotify.localhost
+      		- WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN: $WATCHTOWER_NOTIFICATION_GOTIFY_TOKEN
+	labels:
+     		- com.centurylinklabs.watchtower.enable=true
 	security_opt:
-     - "no-new-privileges=true"
+     		- no-new-privileges=true
 	 volumes:
-      - /etc/timezone:/etc/timezone:ro
-      - /etc/localtime:/etc/localtime:ro
-	  - /var/run/docker.sock:/var/run/docker.sock	  
+      		- /etc/timezone:/etc/timezone:ro
+      		- /etc/localtime:/etc/localtime:ro
+      		- /var/run/docker.sock:/var/run/docker.sock	  
     networks:
-      - q_net_lan_watchtower:
-        ipv4_address: 10.10.10.199
-	ports:
-      - 80:8080 # Watchtower Web UI https://host_ip
+      		- q_net_lan_watchtower:
+        	ipv4_address: 10.10.10.199
+    ports:
+      		- 80:8080 # Watchtower Web UI https://host_ip
 volumes:
   vol_data:  
 networks:
