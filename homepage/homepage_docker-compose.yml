@@ -1,11 +1,13 @@
+---
+# Simple docker-compose.yml
 #
-# Portainer: Environment variables
+# Portainer environment variables:
 # name-xyz = the password is in enpass
 #
 
 version: "3.3"
 services:
-  homepage:
+  homepage_app:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage_app
     restart: unless-stopped
@@ -13,13 +15,15 @@ services:
       PUID: 1000
       PGID: 1000
     volumes:
-      - vol_config:/app/config
-      - vol_config:/var/run/docker.sock:ro
+      - vol_data:/app/config
+      - vol_data:/var/run/docker.sock:ro
     networks:
-      bookstack-network_default:
-        ipv4_address: 10.10.10.171
+      b_net_lan_default:        
     ports:
       - 3000:3000
 
 volumes:
-  vol_config:
+  vol_data:
+networks:
+  b_net_lan_default:
+    external: true
