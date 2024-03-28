@@ -18,9 +18,9 @@ services:
   semaphore_app:
     image: semaphoreui/semaphore:latest
 	container_name: semaphore_app
-    restart: unless-stopped
+   	restart: unless-stopped
 	depends_on:
-      - semaphore_db
+      	- semaphore_db
     environment:
         SEMAPHORE_DB_USER: semaphore
         SEMAPHORE_DB_PASS: $SEMAPHORE_DB_PASS
