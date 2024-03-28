@@ -11,6 +11,8 @@ services:
     image: ghcr.io/gethomepage/homepage:latest
     container_name: homepage_app
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       PUID: 1000
       PGID: 1000
@@ -20,7 +22,7 @@ services:
     networks:
       b_net_lan_default:        
     ports:
-      - 3000:3000
+      - 3000:3000 # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
