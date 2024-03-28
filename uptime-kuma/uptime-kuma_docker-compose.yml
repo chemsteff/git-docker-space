@@ -27,5 +27,5 @@ services:
 volumes:
   vol_data:
 networks:
-  b_net_lan_default:
+  b_net_int_default:
    external: true
