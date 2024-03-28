@@ -7,9 +7,9 @@
 
 version: "3"
 services:
-  homepage_app:
+  homepage:
     image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage_app
+    container_name: homepage
     restart: unless-stopped
     labels:
       - com.centurylinklabs.watchtower.enable=true
@@ -22,10 +22,14 @@ services:
     networks:
       b_net_lan_default:
         ipv4_address: 172.28.1.146
+      b_net_int_default:
+        ipv4_address: 172.25.1.146
     ports:
       - 8146:3000 # <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
   b_net_lan_default:
+    external: true
+  b_net_int_default:
     external: true
