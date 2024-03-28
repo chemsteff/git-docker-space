@@ -37,7 +37,7 @@ services:
       b_net_lan_default:
         ipv4_address: 172.28.1.194
       b_net_dmz_default:
-        ipv4_address: 172.28.1.195
+        ipv4_address: 172.29.1.194
     ports:
       - 80:80 # <port:host> : <port:container>
       - 443:443 # <port:host> : <port:container>      
