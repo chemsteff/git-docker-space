@@ -12,6 +12,8 @@ services:
     image: ghcr.io/tautulli/tautulli:latest
     container_name: tautulli_app
     restart: unless-stopped
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
     environment:
       - PUID: 1000
       - PGID: 1000
@@ -21,7 +23,7 @@ services:
     networks:
       - b_net_lan_default:        
    ports:
-      - 8181:8181
+      - 8181:8181 #  <Host Port>:<Container Port>
 volumes:
   vol_data:
 networks:
