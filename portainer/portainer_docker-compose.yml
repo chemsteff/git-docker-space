@@ -1,0 +1,31 @@
+---
+# Simple docker-compose.yml
+#
+# Portainer environment variables:
+# name-xyz = show enpass
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_portainer
+#
+
+version: '3'
+
+services:
+  portainer_app:
+    image: portainer/portainer-ce:latest
+    container_name: portainer_app
+    restart: always
+    volumes:
+      - vol_data:/data
+	  - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - 8000:8000 # Portainer API
+      - 443:9443	# Portainer Web UI https://host_ip:443
+    networks:
+      - q_net_lan_portainer:
+        ipv4_address: 10.10.10.191
+volumes:
+  vol_data:
+networks:
+  q_net_lan_portainer:
+    external: true
