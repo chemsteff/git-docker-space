@@ -21,11 +21,20 @@ services:
       environment:
         TZ: Europe/Zurich
         WEBPASSWORD: $WEBPASSWORD
+        FTLCONF_LOCAL_IPV4: "10.10.10.101"
+        DHCP_ACTIVE: true
+        DHCP_START: "10.10.10.230"
+        DHCP_END: "10.10.10.250"
+        DHCP_LEASETIME: "2"
+        PIHOLE_DOMAIN: "brainrouting.com"
+        PIHOLE_DNS_: "9.9.9.10;149.112.112.10;1.1.1.1;1.0.0.1"
         DNS_BOGUS_PRIV: "False"
         DNS_FQDN_REQUIRED: "True"
         DNSMASQ_LISTENING: "all"
+        TEMPERATUREUNIT: "c"
+        WEBTHEME: "default-dark"
       cap_add:
-      - NET_ADMIN
+      - NET_ADMIN      
       volumes:
         - vol_data:/etc-pihole:/etc/pihole
         - vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d
