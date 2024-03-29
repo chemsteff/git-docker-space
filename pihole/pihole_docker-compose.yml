@@ -14,19 +14,26 @@ services:
     pihole:
       container_name: pihole
       image: pihole/pihole:latest
-      hostname: pihole.domain.xyz 
+      hostname: pihole.brainrouting.ccom 
       restart: always
       labels:
         - com.centurylinklabs.watchtower.enable=true
       environment:
         TZ: Europe/Zurich
-        WEBPASSWORD: $WEBPASSWORD        
+        WEBPASSWORD: $WEBPASSWORD
+        DNS_BOGUS_PRIV: "False"
+        DNS_FQDN_REQUIRED: "True"
+        DNSMASQ_LISTENING: "all"
+      cap_add:
+      - NET_ADMIN
       volumes:
         - vol_data:/etc-pihole:/etc/pihole
         - vol_data:/etc-dnsmasq.d:/etc/dnsmasq.d
       networks:
         q_net_lan_pihole:
           ipv4_address: 10.10.10.253
+        b_net_int_default:
+          ipv4_address: 172.25.1.253
       ports:
         - 53:53/tcp # <Host Port>:<Container Port>
         - 53:53/udp # <Host Port>:<Container Port>
@@ -35,4 +42,6 @@ volumes:
   vol_data:
 networks:
  q_net_lan_pihole:
+   external: true
+ b_net_int_default:
    external: true
