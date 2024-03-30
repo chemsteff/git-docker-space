@@ -8,6 +8,7 @@
 #
 # Create if not already available:
 # docker network create -d bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.1.254 b_net_lan_default
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 _net_lan_guacamole
 #
 # !!!_ ATTENTION_!!! - 
 # The database server must first be created and edited.
@@ -80,6 +81,8 @@ services:
     networks:
       b_net_int_default:
         ipv4_address: 172.25.1.142
+      q_net_lan_guacamole:
+        ipv4_address: 10.10.10.142
     expose: # Unlike ports, expose is not externally accessible
       - "4822"
   guacamole:
@@ -127,4 +130,5 @@ networks:
     external: true
   b_net_lan_default:
     external: true
-    
+  q_net_lan_guacamole:
+    external: true
