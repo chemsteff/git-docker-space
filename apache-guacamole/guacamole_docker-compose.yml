@@ -1,82 +1,132 @@
 ---
-# Simple docker-compose.yml
 #
-# Portainer: Environment variables
+# Database container for guacamole
+#
+# Portainer Environment variables:
 # MYSQL_ROOT_PASSWORD = show enpass
-# MYSQL_PASSWORD = show enpass
+# MYSQL_USER_PASSWORD = show enpass
 #
-# Qnap: Create networks:
+# Create if not already available:
 # docker network create -d bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.1.254 b_net_lan_default
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 q_net_lan_guacamole
 #
-#  Within the 'guacamole' service. This will expose the guacamole webinterface directly
-#  on port 8080 and you can use it for your own purposes.
-#  Note: Guacamole is available on :8080/guacamole, not /.
+#
+# !!!_ ATTENTION_!!! - 
+# The database server must first be created and edited.
+#
+# Name of the stack: guacamole
+#
+# Extract the database initialization script initdb.sql from guacamole image
+# - docker pull guacamole/guacamole:latest
+# - docker run --rm guacamole/guacamole /opt/guacamole/bin/initdb.sh --mysql > initdb.sql
+#
+# Create database server:
+# - Copy only the part for the guac_db service
+# - Add volumes and networks
+# 
+# Once the container has been created and started, create the database, the user and configure his authorization
+# - docker exec -i guacamole_database sh -c 'exec mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -e "CREATE DATABASE guacamole_db;"'
+# - docker exec -i guacamole_database sh -c 'exec mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -e "CREATE USER \"guacamole_user\" IDENTIFIED BY \"$MYSQL_USER_PASSWORD\";"'
+# - docker exec -i guacamole_database sh -c 'exec mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" -e "GRANT SELECT,INSERT,UPDATE,DELETE,CREATE ON guacamole_db.* TO \"guacamole_user\"@\"%\";"'
+# Now configure the database with initdb.sql
+# - docker exec -i guacamole_database sh -c 'exec mariadb -uroot -p"$MYSQL_ROOT_PASSWORD" guacamole_db' < initdb.sql
+#
+# The stack can now be extended with the guadcd and guacamole services
+# Customize volumes and networks
+# Done
+#
+#  Note: Guacamole is available on :41101/guacamole, not /.
 #
 # The initial login to the guacamole webinterface is:
 #
 #     Username: guacadmin
 #     Password: guacadmin
 #
-# Make sure you change it immediately!
 #
 
-version: '3'
+version: "2"
 
 services:
-   guacamole:
-     image: guacamole/guacamole:latest
-     container_name: guacamole
-     restart: unless-stopped
-     labels:
-       - com.centurylinklabs.watchtower.enable=true
-     depends_on:
-       - guac_db
-       - guacd
-     environment:
-       GUACD_HOSTNAME: guacd
-       MYSQL_HOSTNAME: guac_db
-       MYSQL_DATABASE: guacamole_db
-       MYSQL_USER: guacamole_user
-       MYSQL_PASSWORD: $MYSQL_PASSWORD
-       TOTP_ENABLED: true
-     volumes:
-       - vol_data:/config
-     networks:
-       b_net_lan_default:
-         ipv4_address: 172.28.1.141
-     ports:
-       - 41101:8080/tcp # <Host Port>:<Container Port>
-   guacd:
-    image: guacamole/guacd:latest
-    container_name: guacd
+  guac_db:
+    image: mariadb:latest
+    container_name: guacamole_database
+    hostname: guacamole_database
     restart: unless-stopped
     labels:
-     - com.centurylinklabs.watchtower.enable=true
-    volumes:
-      - vol_data:/drive:rw
-      - vol_data:/record:rw
-    networks:
-      b_net_lan_default:    
-        ipv4_address: 172.28.1.142
-   guac_db:
-    image: mariadb:10.9.5
-    container_name: guac_db
-    restart: unless-stopped
-    labels:
-     - com.centurylinklabs.watchtower.enable=true
+      - com.centurylinklabs.watchtower.enable=true
+    security_opt:
+      - no-new-privileges:false
     environment:
+      TZ: "Europe/Zurich"
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_DATABASE: guacamole_db
-      MYSQL_USER: guacamole_user
-      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_USER_PASSWORD: $MYSQL_USER_PASSWORD
     volumes:
-      - vol_db:/var/lib/mysql
+      - vol_db:/var/lib/mysql      
     networks:
-       b_net_lan_default:
-         ipv4_address: 172.28.1.143
+      b_net_int_default:
+        ipv4_address: 172.25.1.143
+    expose: # Im Unterschied zu ports, ist expose nicht von extern zugänglich
+      - "3306"
+  guacd:
+    image: guacamole/guacd:latest
+    container_name: guacamole_backend
+    hostname: guacamole_backend
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:false
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    volumes:
+      - vol_back_data:/data
+      - vol_back_conf:/conf:ro      
+    networks:
+      b_net_int_default:
+        ipv4_address: 172.25.1.142
+    expose: # Im Unterschied zu ports, ist expose nicht von extern zugänglich
+      - "4822"
+  guacamole:
+    image: guacamole/guacamole:latest
+    container_name: guacamole_frontend
+    hostname: guacamole_frontend
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:false
+    labels:
+      - com.centurylinklabs.watchtower.enable=true
+    depends_on:
+      - guacd
+      - guac_db    
+    healthcheck:
+      test: curl -f http://10.10.10.12:41101/guacamole || exit 1
+    environment:
+      TZ: Europe/Zurich
+      GUACD_HOSTNAME: "guacamole_backend"
+      GUACD_PORT: "4822"
+      MYSQL_HOSTNAME: "guacamole_database"
+      MYSQL_PORT: "3306"
+      MYSQL_DATABASE: "guacamole_db"
+      MYSQL_USER: "guacamole_user"
+      MYSQL_PASSWORD: "$MYSQL_USER_PASSWORD"
+      GUACAMOLE_HOME: "/data"
+    volumes:
+      - vol_front_data:/data
+      - vol_front_conf:/conf:ro
+    networks:
+      b_net_lan_default:
+        ipv4_address: 172.28.1.141
+      b_net_int_default:
+        ipv4_address: 172.25.1.141
+    ports:
+      - "41101:8080"
 volumes:
-  vol_data:
   vol_db:
+  vol_back_data:
+  vol_back_conf:
+  vol_front_data:
+  vol_front_conf:
 networks:
+  b_net_int_default:
+    external: true
   b_net_lan_default:
     external: true
+    
