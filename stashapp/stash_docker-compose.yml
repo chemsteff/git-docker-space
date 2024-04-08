@@ -56,4 +56,50 @@ networks:
   q_net_lan_watchtower:
      external: true
 
+
+---
+#
+# Portainer environment variables:
+#
+# Qnap: Create networks:
+# docker network create -d qnet --opt=iface=bond0 --ipam-driver=qnet --ipam-opt=iface=bond0 --subnet=10.10.10.0/24 --gateway=10.10.10.1 stash-nw
+#
+
+version: "3.4"
+
+services:
+  stash:
+    image: stashapp/stash:latest
+    container_name: stash
+    restart: unless-stopped    
+    security_opt:
+     - no-new-privileges=true
+    environment:     
+     - STASH_STASH=/data/
+     - STASH_CONFIG_FILE=/root/.stash/config.yml
+     - STASH_GENERATED=/generated/
+     - STASH_METADATA=/metadata/
+     - STASH_CACHE=/cache/
+     - STASH_PORT=80
+    volumes:
+     - ./etc/localtime:/etc/localtime:ro
+     - ./share/docker/container-station-data/volumes/local/stash_vol_config:/root/.stash
+     - ./share/pmoviez/:/data
+     - ./share/docker/container-station-data/volumes/local/stash_vol_metadata:/metadata
+     - ./share/docker/container-station-data/volumes/local/stash_vol_cache:/cache
+     - ./share/docker/container-station-data/volumes/local/stash_vol_blobs:/blobs
+     - ./share/docker/container-station-data/volumes/local/stash_vol_generated:/generated
+    networks:
+      stash-nw:
+        ipv4_address: 10.10.10.200
+    ports:
+      - "80:80/tcp" # <Host Port>:<Container Port> Stashr Web UI https://host_ip
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "2m"
+networks:
+  stash-nw:
+     external: true
       
